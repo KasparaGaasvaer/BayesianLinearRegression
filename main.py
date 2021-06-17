@@ -11,7 +11,6 @@ from generate_data import *
 from bayesian_linear_regression import *
 
 produce_data = sys.argv[1]
-
 sigma = 0.2
 alpha = 5*10**(-3)
 dist_mean = 0
@@ -26,68 +25,72 @@ vals = np.array([-0.3,0.5])
 fz = 14
 
 
-if produce_data == "gauss":
+if produce_data == "linear_fit":
     # Ser at lavere alpha gir posterior vektfordeling nærmere ekte punkt enn høy
     # Beta langt unna ekte gir større fordeling
     N = [0,2,10,100]
+    basis = "poly"
     for n in N:
         #gen_dat(n,sigma, dist_mean, vals)
         data = "GaussianData_N_"+str(n)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
         degree = 2    #Should be number of parameters INCLUDING bias term
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,produce_data,vals,deg=degree)
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,basis,vals,deg=degree)
         my_solver.read_data(path + data)
         my_solver.posterior_f()
-        my_solver.plot_data_space(x)
+        dataspace_figure = "./Results/Linear/Dataspace_N_"
+        predictive_figure = "./Results/Linear/Predictive_N_"
+        my_solver.plot_data_space(x,dataspace_figure,predictive_figure)
         my_solver.plot_posterior()
 
-
-
-
-if produce_data == "hyppar":
+if produce_data == "gridsearch_hyperparams":
     n = 50
     gen_dat(n,sigma, dist_mean, vals)
     data = "GaussianData_N_"+str(n)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
     degree = 2    #Should be number of parameters INCLUDING bias term
     alpha_list = [alpha, alpha*10,  alpha*100, alpha*1000]
     beta_list = [beta, beta*10, beta/10, beta/100]
+    basis = "poly"
     for a in alpha_list:
         for b in beta_list:
-            my_solver = Bayesian_Linear_Regression(b,a, dist_mean,produce_data,vals,deg=degree)
+            my_solver = Bayesian_Linear_Regression(b,a, dist_mean, basis,vals, deg=degree)
             my_solver.read_data(path + data)
             my_solver.posterior_f()
-            my_solver.plot_data_space(x)
+            dataspace_figure = "./Results/Linear/Hypers/Datas_a_" +str(a) +"_b_" + str(b)
+            predictive_figure = "./Results/Linear/Hypers/Pred_a_" +str(a) +"_b_" + str(b)
+            my_solver.plot_data_space(x,dataspace_figure,predictive_figure)
             my_solver.plot_posterior()
 
-
-if produce_data == "sin":
+if produce_data == "sinusoidal_data_gauss_basis":
     degree = 10    #Should be number of parameters INCLUDING bias term
     N = [0,2,5,10,50,100]
+    basis = "gauss"
     for n in N:
         gen_dat_sin(n,sigma, dist_mean)
         data = "SinData_N_"+str(n)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,produce_data, vals,deg=degree)
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,basis, vals,deg=degree)
         my_solver.read_data(path + data)
         my_solver.posterior_f()
-        my_solver.plot_sinoidal(x)
+        dataspace_figure = "./Results/GaussianBasis/Dataspace_N_"
+        predictive_figure = "./Results/GaussianBasis/Predictive_N_"
+        my_solver.plot_sinoidal(x,dataspace_figure,predictive_figure)
 
-if produce_data == "poly":
+if produce_data == "sinusoidal_data_poly_basis":
     gen_dat_sin(N,sigma, dist_mean)
     data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
     fig, ax = plt.subplots(2,5,constrained_layout=True,sharex=True, sharey=True)
     ax = ax.ravel()
+    basis = "poly"
     degs = [1,2,3,4,5,6,7,8,9,10]
     marg_liks = np.zeros(len(degs))
     for i in range(len(degs)):
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean, produce_data, vals,deg = degs[i])
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean, basis, vals,deg = degs[i])
         my_solver.read_data(path + data)
         my_solver.posterior_f()
         my_solver.plot_many_poly(x,ax[i])
         marg_liks[i] = my_solver.log_marg_likelihood()
 
-    #fig.tight_layout()
     fig.supxlabel('x', fontsize = 16)
     fig.supylabel('y', fontsize = 16)
-    #fig.suptitle("Real data = %i points" % N)
     fig.suptitle("Polynomial basis functions of degree p", fontsize = 16)
     plt.show()
 
@@ -101,7 +104,7 @@ if produce_data == "poly":
     plt.savefig("./Results/ModelEvidence.pdf")
     plt.show()
 
-if produce_data == "poly_test":
+if produce_data == "gaussian_data_poly_basis":
     vals = [1,2*10**(-1),-3,4,5,6,7,8,9]
     gen_dat(N,sigma, dist_mean, vals)
     data = "GaussianData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+ "_p_"+str(len(vals)) +".txt"
@@ -126,15 +129,17 @@ if produce_data == "poly_test":
     plt.ylabel("Model evidence")
     plt.show()
 
-if produce_data == "sin_many":
+if produce_data == "gauss_basis_test":
     degs = [1,2,3,4,5,6,7,8,9,10]
     gen_dat_sin(N,sigma, dist_mean)
     data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
     for i in range(len(degs)):
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,"sin",vals, deg=degs[i])
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,"gauss",vals, deg=degs[i])
         my_solver.read_data(path + data)
         my_solver.posterior_f()
-        my_solver.plot_sinoidal(x)
+        dataspace_figure = "./Results/GaussianBasis/Dataspace_N_"
+        predictive_figure = "./Results/GaussianBasis/Predictive_N_"
+        my_solver.plot_sinoidal(x, dataspace_figure, predictive_figure)
 
 if produce_data == "max_evidence":
     tol = 10**(-5)
@@ -179,7 +184,7 @@ if produce_data == "max_evidence":
 
         alpha, beta = new_alpha, new_beta
 
-if produce_data == "skl":
+if produce_data == "skl_compare":
     N = 100
     tol = 10**(-5)
     degree = 10
@@ -253,8 +258,6 @@ if produce_data == "skl":
     plt.savefig("./Results/MAXEVIDENCE_SKL_Dataspace_N_" + str(n)+".pdf")
     plt.show()
 
-
-    #print(skl_solver.get_params())
     print(" ")
     print("Weights from skl:")
     print(skl_solver.coef_)
