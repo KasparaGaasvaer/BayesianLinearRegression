@@ -53,23 +53,4 @@ with my_model:
     plt.savefig("Pymc3_plot.pdf")
     plt.show()
 
-    #az.plot_posterior(samples)
     print(az.summary(samples, round_to=2))
-
-
-
-
-
-"""
-{'w0': array(-0.306625), 'w1': array(0.49755716), 'beta_log__': array(1.62493193), 'beta': array(5.07807335)}
-Starting HMC-NUTS sampling...
-Auto-assigning NUTS sampler...
-Initializing NUTS using jitter+adapt_diag...
-Sequential sampling (2 chains in 1 job)
-NUTS: [beta, w1, w0]
-Sampling 2 chains for 1_000 tune and 2_000 draw iterations (2_000 + 4_000 draws total) took 3 seconds.0% [3000/3000 00:01<00:00 Sampling chain 1, 0 divergences]
-      mean    sd  hdi_3%  hdi_97%  mcse_mean  mcse_sd  ess_bulk  ess_tail  r_hat
-w0   -0.31  0.02   -0.34    -0.27       0.00      0.0   4890.39   2795.00    1.0
-w1    0.50  0.04    0.43     0.56       0.00      0.0   5204.00   3025.90    1.0
-beta  5.04  0.36    4.31     5.69       0.01      0.0   4765.59   2647.03    1.0
-"""

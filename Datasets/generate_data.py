@@ -27,12 +27,6 @@ def gen_dat(N,sigma,mu, vals):
             outfile.write(str(x[i]) + " " + str(data[i]))
             outfile.write("\n")
 
-    path = "./Datasets/"
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    os.system("mv" + " " + filename + " " + path)
-
 
 def gen_dat_sin(N,sigma,mu):
 
@@ -51,9 +45,3 @@ def gen_dat_sin(N,sigma,mu):
         for i in range(N):
             outfile.write(str(x[i]) + " " + str(data[i]))
             outfile.write("\n")
-
-    path = "./Datasets/"
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    os.system("mv" + " " + filename + " " + path)
