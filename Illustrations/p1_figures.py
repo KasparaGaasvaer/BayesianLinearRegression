@@ -24,11 +24,9 @@ for n in N:
     posterior = likelihood * prior
     posterior /= sum(likelihood*prior)
 
-    plt.title("Samples = %i" %n)
     plt.fill_between(x,prior/res, label = "Prior", alpha =0.3, color = "lime")
     plt.fill_between(x,likelihood/res, label = "Likelihood", alpha =0.3, color = "deepskyblue")
     plt.fill_between(x, posterior/res, label = "Posterior", alpha =0.3,  color = "coral")
-    plt.ylabel("Probability density")
     plt.legend()
-    plt.savefig("PD"+"_n_" + str(n) + ".pdf")
+    plt.savefig("For_readme_PD"+"_n_" + str(n) + ".pdf")
     plt.show()
