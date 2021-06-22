@@ -6,9 +6,21 @@ This repository contains two papers written on the subject. *An Introduction to 
 
 ### Code
 - Kan bruke main filen for å reprodusere
+N is set to 100 data points which can easily be changed at the top of the main program along with the values of precision parameters.
 
 ```console
 python3 main.py task
 ```  
 
-Choice of task
+Where the valid choices of "task" consists of:
+-  `linear_fit` : fits data from polynomial function using a linear polynomial basis function for increasing amount of N accessible data points.
+
+- `gridsearch_hyperparams` : Performs a grid search on sets of precision parameters fitting the same data as in linear_fit.
+
+- `sinusoidal_data_gauss_basis` : fits data from a sinusoidal function using 9 gaussian basis functions for increasing amount of N accessible data points.
+
+- `sinusoidal_data_poly_basis` : fits data from a sinusoidal function using polynomial basis functions of degree 0-9. Calculates log marginal likelihood score for each degree of polynomial.
+
+- `gaussian_data_poly_basis` : fits data from a polynomial of degree 8 using polynomial basis functions of degree 0-9. Calculates log marginal likelihood score for each degree of polynomial.
+
+- `skl_compare` : maximizes the evidence function and updates precision parameters iteratively. Fits data from sinusoidal function using optimized parameters. Compares weights to those generated from Scikit-Learn BayisianRidge model used on the same data set. 

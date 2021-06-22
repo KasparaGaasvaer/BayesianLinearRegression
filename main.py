@@ -7,7 +7,7 @@ from sklearn import linear_model
 import pymc3 as pm
 import arviz as az
 
-from generate_data import *
+from Datasets.generate_data import *
 from bayesian_linear_regression import *
 
 produce_data = sys.argv[1]
@@ -43,7 +43,7 @@ if produce_data == "linear_fit":
         my_solver.plot_posterior()
 
 if produce_data == "gridsearch_hyperparams":
-    n = 50
+    n = N
     gen_dat(n,sigma, dist_mean, vals)
     data = "GaussianData_N_"+str(n)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
     degree = 2    #Should be number of parameters INCLUDING bias term
@@ -129,61 +129,6 @@ if produce_data == "gaussian_data_poly_basis":
     plt.ylabel("Model evidence")
     plt.show()
 
-if produce_data == "gauss_basis_test":
-    degs = [1,2,3,4,5,6,7,8,9,10]
-    gen_dat_sin(N,sigma, dist_mean)
-    data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
-    for i in range(len(degs)):
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,"gauss",vals, deg=degs[i])
-        my_solver.read_data(path + data)
-        my_solver.posterior_f()
-        dataspace_figure = "./Results/GaussianBasis/Dataspace_N_"
-        predictive_figure = "./Results/GaussianBasis/Predictive_N_"
-        my_solver.plot_sinoidal(x, dataspace_figure, predictive_figure)
-
-if produce_data == "max_evidence":
-    tol = 10**(-5)
-    degree = 10
-    alpha = 1
-    beta = 1
-    alphas = []
-    betas = []
-    gen_dat_sin(N,sigma, dist_mean)
-    data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
-    for iteration in range(1000):
-        alphas.append(alpha)
-        betas.append(beta)
-        #print("alpha = ",alpha, "beta = ", beta)
-        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean, "poly",vals, deg = degree)
-        my_solver.read_data(path + data)
-        my_solver.posterior_f()
-        new_alpha, new_beta = my_solver.max_evidence()
-
-        if np.abs(alpha - new_alpha) < tol and np.abs(beta-new_beta) < tol:
-            alphas.append(new_alpha)
-            betas.append(new_beta)
-            alphas = np.array(alphas)
-            betas = np.array(betas)
-            itt = np.array(list(range(0, iteration+2)))
-            fig, (ax1, ax2) = plt.subplots(1, 2)
-            fig.suptitle('Iterative convergence for $\\alpha$ and $\\beta$', fontsize = 16)
-            ax1.plot(itt, alphas,"*")
-            ax1.plot(itt[-1], alphas[-1],"*", label= "Optimal $\\alpha$ = %.4f" % alphas[-1])
-            ax1.set_ylabel("$\\alpha$", fontsize = 16)
-            ax2.plot(itt, betas,"*")
-            ax2.plot(itt[-1], betas[-1],"*", label= "Optimal $\\beta$ = %.4f" %betas[-1])
-            ax2.set_ylabel("$\\beta$", fontsize = 16)
-            fig.supxlabel('Iterations', fontsize = 16)
-            ax1.tick_params(axis='both', which='major', labelsize=14)
-            ax2.tick_params(axis='both', which='major', labelsize=14)
-            ax1.legend()
-            ax2.legend()
-            plt.show()
-            my_solver.plot_max_evidence(x)
-            break
-
-        alpha, beta = new_alpha, new_beta
-
 if produce_data == "skl_compare":
     N = 100
     tol = 10**(-5)
@@ -261,3 +206,62 @@ if produce_data == "skl_compare":
     print(" ")
     print("Weights from skl:")
     print(skl_solver.coef_)
+
+
+"""
+if produce_data == "gauss_basis_test":
+    degs = [1,2,3,4,5,6,7,8,9,10]
+    gen_dat_sin(N,sigma, dist_mean)
+    data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
+    for i in range(len(degs)):
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean,"gauss",vals, deg=degs[i])
+        my_solver.read_data(path + data)
+        my_solver.posterior_f()
+        dataspace_figure = "./Results/GaussianBasis/Dataspace_N_"
+        predictive_figure = "./Results/GaussianBasis/Predictive_N_"
+        my_solver.plot_sinoidal(x, dataspace_figure, predictive_figure)
+"""
+"""
+if produce_data == "max_evidence":
+    tol = 10**(-5)
+    degree = 10
+    alpha = 1
+    beta = 1
+    alphas = []
+    betas = []
+    gen_dat_sin(N,sigma, dist_mean)
+    data = "SinData_N_"+str(N)+"_mean_"+str(dist_mean)+"_sigma_"+str(sigma)+".txt"
+    for iteration in range(1000):
+        alphas.append(alpha)
+        betas.append(beta)
+        #print("alpha = ",alpha, "beta = ", beta)
+        my_solver = Bayesian_Linear_Regression(beta,alpha, dist_mean, "poly",vals, deg = degree)
+        my_solver.read_data(path + data)
+        my_solver.posterior_f()
+        new_alpha, new_beta = my_solver.max_evidence()
+
+        if np.abs(alpha - new_alpha) < tol and np.abs(beta-new_beta) < tol:
+            alphas.append(new_alpha)
+            betas.append(new_beta)
+            alphas = np.array(alphas)
+            betas = np.array(betas)
+            itt = np.array(list(range(0, iteration+2)))
+            fig, (ax1, ax2) = plt.subplots(1, 2)
+            fig.suptitle('Iterative convergence for $\\alpha$ and $\\beta$', fontsize = 16)
+            ax1.plot(itt, alphas,"*")
+            ax1.plot(itt[-1], alphas[-1],"*", label= "Optimal $\\alpha$ = %.4f" % alphas[-1])
+            ax1.set_ylabel("$\\alpha$", fontsize = 16)
+            ax2.plot(itt, betas,"*")
+            ax2.plot(itt[-1], betas[-1],"*", label= "Optimal $\\beta$ = %.4f" %betas[-1])
+            ax2.set_ylabel("$\\beta$", fontsize = 16)
+            fig.supxlabel('Iterations', fontsize = 16)
+            ax1.tick_params(axis='both', which='major', labelsize=14)
+            ax2.tick_params(axis='both', which='major', labelsize=14)
+            ax1.legend()
+            ax2.legend()
+            plt.show()
+            my_solver.plot_max_evidence(x)
+            break
+
+        alpha, beta = new_alpha, new_beta
+"""
