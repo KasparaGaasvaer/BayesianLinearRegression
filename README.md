@@ -2,7 +2,7 @@
 Repository containing the work of Kaspara Skovli Gåsvær on Bayesian linear regression. Much of the work found in this repository is based on the books *Pattern Recognition and Machine Learning* ([Bishop, 2006](http://users.isr.ist.utl.pt/~wurmd/Livros/school/Bishop%20-%20Pattern%20Recognition%20And%20Machine%20Learning%20-%20Springer%20%202006.pdf)) and *Data Analysis: A Bayesian Tutorial* ([Sivia, 2006](http://aprsa.villanova.edu/files/sivia.pdf)).
 
 <p align="center">
-<img src="https://github.com/KasparaGaasvaer/BayesianLinearRegression/blob/main/Illustrations/readmeimg.png" alt="Illustration of prior, likelihood and posterior distribution." width="768" height="576">
+<img src="https://github.com/KasparaGaasvaer/BayesianLinearRegression/blob/main/Illustrations/readmeimg.png" alt="Illustration of prior, likelihood and posterior distribution." width="384" height="288">
 </p>
 
 ### Articles
