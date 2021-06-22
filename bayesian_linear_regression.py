@@ -162,7 +162,7 @@ class Bayesian_Linear_Regression:
         plt.xlim([-1.0,1.0])
         plt.ylim([-1.0,1.0])
         plt.plot(gridpoints, self.y_out(self.real_weights, self.synt_des_mat),"r-.", label = "Line from true weights")
-        plt.legend(fontsize = 12)
+        plt.legend(fontsize = 12,loc = "upper right")
         plt.savefig(figure_ds_name+ str(len(self.x))+".pdf")
         plt.show()
 
@@ -175,7 +175,7 @@ class Bayesian_Linear_Regression:
         plt.title("Predictive distribution", fontsize = 16)
         plt.xlim([-1.0,1.0])
         plt.ylim([-1.0,1.0])
-        plt.legend(fontsize = 12)
+        plt.legend(fontsize = 12,loc = "upper right")
         plt.savefig(figure_pred_name+ str(len(self.x))+".pdf")
         plt.show()
 
@@ -203,7 +203,7 @@ class Bayesian_Linear_Regression:
         plt.xticks(fontsize = 16)
         plt.yticks(fontsize = 16)
         plt.xlim(-1.0,1.0)
-        plt.legend()
+        plt.legend(loc = "upper right")
         plt.savefig(figure_ds_name+ str(len(self.x))+".pdf")
         plt.show()
 
@@ -217,7 +217,7 @@ class Bayesian_Linear_Regression:
         plt.xlim(-1.0,1.0)
         plt.xticks(fontsize = 16)
         plt.yticks(fontsize = 16)
-        plt.legend()
+        plt.legend(loc = "upper right")
         plt.savefig(figure_pred_name+ str(len(self.x))+".pdf")
         plt.show()
 
@@ -282,7 +282,7 @@ class Bayesian_Linear_Regression:
         plt.title("Posterior", fontsize = 16)
         plt.contourf(w0, w1, self.posterior.pdf(grid), 100)
         plt.plot(self.real_weights[0], self.real_weights[1],"w+", label= "True weighs = ["+str(self.real_weights[0]) +"," +str(self.real_weights[1]) +"]" ,markersize = 12)
-        plt.legend(fontsize = 12)
+        plt.legend(fontsize = 12,loc = "upper right")
         plt.xlabel('$\omega_0$', fontsize=16)
         plt.ylabel('$\omega_1$', fontsize=16)
         plt.savefig("./Results/Linear/Posterior_N_"+ str(len(self.x))+".pdf")
